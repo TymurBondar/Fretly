@@ -4,6 +4,7 @@ void main() {
   runApp(const MyApp());
 }
 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -18,43 +19,57 @@ class MyApp extends StatelessWidget {
           data: NavigationBarThemeData(
             indicatorColor: const Color.fromARGB(255, 18, 86, 141),
             labelTextStyle: MaterialStateProperty.all(
-               const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500)
+               const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500)
             ),
           ),
           child: NavigationBar(
             backgroundColor: const Color.fromARGB(255, 26, 104, 168),
+            height: 60,
+            selectedIndex: 2,
             destinations: const [
-              NavigationDestination(
-                icon: Icon(
-                  Icons.graphic_eq_outlined,
-                  color: Colors.white,
-                  size: 38.0,
-                ),
-                label: ("Record"),
+              Padding(
+                padding: EdgeInsets.only(top: 17.5),
+                child: NavigationDestination(
+                    icon: Icon(
+                      Icons.graphic_eq_outlined,
+                      color: Colors.white,
+                      size: 36.0,
+                    ),
+                    label: ("Record"),
+                  ),
               ),
-              NavigationDestination(
-                icon: Icon(
-                  Icons.picture_as_pdf,
-                  color: Colors.white,
-                  size: 38.0,
+              Padding(
+                padding: EdgeInsets.only(top: 17.5),
+                child: NavigationDestination(
+                  icon: Icon(
+                    Icons.picture_as_pdf,
+                    color: Colors.white,
+                    size: 36.0,
+                  ),
+                  label: "Tabs",
                 ),
-                label: "Tabs",
               ),
-              NavigationDestination(
-                icon: Icon(
-                  Icons.music_note_outlined,
-                  color: Colors.white,
-                  size: 38.0,
+              Padding(
+                padding: EdgeInsets.only(top: 17.5),
+                child: NavigationDestination(
+                  icon: Icon(
+                    Icons.music_note_outlined,
+                    color: Colors.white,
+                    size: 36.0,
+                  ),
+                  label: "Tune",
                 ),
-                label: "Tune",
               ),
-              NavigationDestination(
-                icon: Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                  size: 38.0,
+              Padding(
+                padding: EdgeInsets.only(top: 17.5),
+                child: NavigationDestination(
+                  icon: Icon(
+                    Icons.settings,
+                    color: Colors.white,
+                    size: 36.0,
+                  ),
+                  label: "Settings",
                 ),
-                label: "Settings",
               ),
             ],
           ),
