@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:permission_handler/permission_handler.dart';
 // import 'package:pitch_detector_dart/pitch_detector.dart';
 
 void main() {
@@ -44,18 +44,32 @@ class MyAppState extends State<MyApp> {
   }
 
   Future<bool> startRecording() async {
-    if (await Permission.microphone.request().isGranted) {
+  // I used Permission_handler package before, I don't think I need it anymore but I will still keep it commented, DELETE IN THE FUTURE
+    // var permissionStatus = await Permission.microphone.request();
+    // log("${permissionStatus.isGranted}"); //permission is now granted
+  var permission = await myRecording.hasPermission();
+
+  if (permission) {
+    log(".hasPermission is working");
+    //there is an error in this try block
+    try {
       if (!await myRecording.isRecording()) {
-        await myRecording.startStream(const RecordConfig());
+        await myRecording.startStream(const RecordConfig(encoder: AudioEncoder.pcm16bits));
+        startTimer();
       }
-      log("Access to Microphone Granted");
-      startTimer();
-      return true;
-    } else {
-      log("You SUCK!!!!");
-      return false;
+    } catch (e) {
+      log("Error during recording setup: $e");
+      return false; // Return false if there is an error
     }
+    log("Access to Microphone Granted");
+    return true;
+  } else {
+    log("Denied!!!!");
+    return false;
   }
+}
+
+
 
   final screens = [
     const Center(
@@ -70,7 +84,7 @@ class MyAppState extends State<MyApp> {
         style: TextStyle(fontSize: 72),
       ),
     ),
-    const Center(child: Text("WHY", style: TextStyle(fontSize: 72))),
+    const Center(child: Text("yes", style: TextStyle(fontSize: 72))),
     const Center(
       child: Text(
         "Settings",
@@ -86,10 +100,12 @@ class MyAppState extends State<MyApp> {
         builder: (context, AsyncSnapshot<bool> snapshot) {
           return Scaffold(
             body: snapshot.hasData
-                ? Text("VOLUME\n${volume0to(100)}",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontSize: 42, fontWeight: FontWeight.bold))
+                ? Center(
+                  child: Text("VOLUME\n${volume0to(100)}",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontSize: 42, fontWeight: FontWeight.bold)),
+                )
                 : screens[index],
             bottomNavigationBar: _buildNavigationBar(),
           );
@@ -112,7 +128,6 @@ class MyAppState extends State<MyApp> {
         onDestinationSelected: (int index) {
           setState(() => this.index = index);
           // Handle navigation logic here
-          log("12312312");
         },
         destinations: [
           _buildNavigationDestination(Icons.graphic_eq_outlined, "Record"),
