@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:record/record.dart';
 // import 'package:permission_handler/permission_handler.dart';
 // import 'package:pitch_detector_dart/pitch_detector.dart';
 
