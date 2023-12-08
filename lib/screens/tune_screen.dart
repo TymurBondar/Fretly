@@ -1,7 +1,11 @@
-import 'package:flutter/material.dart';
+import 'dart:typed_data';
 import 'dart:developer';
-import 'package:record/record.dart';
-import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_audio_capture/flutter_audio_capture.dart';
+import 'package:pitch_detector_dart/pitch_detector.dart';
+import 'package:pitchupdart/instrument_type.dart';
+import 'package:pitchupdart/pitch_handler.dart';
 
 
 class TuneScreen extends StatefulWidget {
@@ -12,74 +16,97 @@ class TuneScreen extends StatefulWidget {
 }
 
 class _TuneScreenState extends State<TuneScreen> {
+  final _audioRecorder = FlutterAudioCapture();
+  final pitchDetectorDart = PitchDetector(44100, 2000);
+  final pitchupDart = PitchHandler(InstrumentType.guitar);
 
-  // THIS CODE IS FOR THE AUDIO PROCESSING (I DON'T KNOW WHAT I AM DOING 10X)
-  final myRecording = AudioRecorder(); // I don't know where i should put this.
-  Timer? timer;
-  double volume = 0.0;
-  double minVolume = -45.0;
+  var note = "";
+  var status = "Click on start";
 
-  @override
-  void dispose(){
-    // Cancel the timer when the widget is disposed to avoid setState errors
-    timer?.cancel();
-    super.dispose();
+  Future<void> _startCapture() async {
+    await _audioRecorder.start(listener, onError,
+        sampleRate: 44100, bufferSize: 3000);
+
+    setState(() {
+      note = "";
+      status = "Play something";
+    });
   }
 
-  startTimer() async {
-    timer ??= Timer.periodic(
-        const Duration(milliseconds: 50), (timer) => updateVolume());
+  Future<void> _stopCapture() async {
+    await _audioRecorder.stop();
+
+    setState(() {
+      note = "";
+      status = "Click on start";
+    });
   }
 
-  updateVolume() async {
-    Amplitude ampl = await myRecording.getAmplitude();
-    if (ampl.current > minVolume) {
+  void listener(dynamic obj) {
+    //Gets the audio sample
+    var buffer = Float64List.fromList(obj.cast<double>());
+    final List<double> audioSample = buffer.toList();
+
+    //Uses pitch_detector_dart library to detect a pitch from the audio sample
+
+    //data is a list of super wierd numbers
+    // log("$audioSample");
+
+    final result = pitchDetectorDart.getPitch(audioSample);
+
+    //If there is a pitch - evaluate it
+    if (result.pitched) {
+      //Uses the pitchupDart library to check a given pitch for a Guitar
+      log("${result.pitch}");
+      final handledPitchResult = pitchupDart.handlePitch(result.pitch);
+      log(handledPitchResult.note);
+
+      //Updates the state with the result
       setState(() {
-        volume = (ampl.current - minVolume) / minVolume;
+        status = handledPitchResult.tuningStatus.toString();
       });
     }
   }
-
-  int volume0to(int maxVolumeToDisplay) {
-    return (volume * maxVolumeToDisplay).round().abs();
+  void onError(Object e) {
+    print(e);
   }
-
-  Future<bool> startRecording() async {
-  // I used Permission_handler package before, I don't think I need it anymore but I will still keep it commented, DELETE IN THE FUTURE
-    // var permissionStatus = await Permission.microphone.request();
-    // log("${permissionStatus.isGranted}"); //permission is now granted
-  var permission = await myRecording.hasPermission();
-
-  if (permission) {
-    // log(".hasPermission is working");
-    //there is an error in this try block
-    try {
-      if (!await myRecording.isRecording()) {
-        await myRecording.startStream(const RecordConfig(encoder: AudioEncoder.pcm16bits));
-        startTimer();
-      }
-    } catch (e) {
-      log("Error during recording setup: $e");
-      return false; // Return false if there is an error
-    }
-    log("volume is ${volume0to(100)}");
-    // log("Access to Microphone Granted");
-    return true;
-  } else {
-    log("Denied!!!!");
-    return false;
-  }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
-    return  FutureBuilder(
-      future: startRecording(),
-      builder: (context, AsyncSnapshot<bool> snapshot) {
-        return Center(child:  Text("Volume is ${volume0to(100)}", style: const TextStyle(fontSize: 55)));
-      },
+    return  Center(
+        child: Column(children: [
+          Center(
+              child: Text(
+            note,
+            style: const TextStyle(
+                color: Colors.black87,
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold),
+          )),
+          const Spacer(),
+          Center(
+              child: Text(
+            status,
+            style: const TextStyle(
+                color: Colors.black87,
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold),
+          )),
+          Expanded(
+              child: Row(
+            children: [
+              Expanded(
+                  child: Center(
+                      child: FloatingActionButton(
+                          onPressed: _startCapture,
+                          child: const Text("Start")))),
+              Expanded(
+                  child: Center(
+                      child: FloatingActionButton(
+                          onPressed: _stopCapture, child: const Text("Stop")))),
+            ],
+          ))
+        ]),
       );
   }
 }
