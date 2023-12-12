@@ -20,7 +20,7 @@ class TabsScreen extends StatelessWidget {
     if (result != null) {
       File file = File(result.files.single.path!);
       log("${file.path}");
-      return File(file.path);
+      OpenFile.open(file.path);
     } else {
       // User canceled the picker
       log("file is null");
