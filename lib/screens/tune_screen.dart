@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:typed_data';
 import 'dart:developer';
 
@@ -6,7 +7,6 @@ import 'package:flutter_audio_capture/flutter_audio_capture.dart';
 import 'package:pitch_detector_dart/pitch_detector.dart';
 import 'package:pitchupdart/instrument_type.dart';
 import 'package:pitchupdart/pitch_handler.dart';
-
 
 class TuneScreen extends StatefulWidget {
   const TuneScreen({super.key});
@@ -20,25 +20,16 @@ class _TuneScreenState extends State<TuneScreen> {
   final pitchDetectorDart = PitchDetector(44100, 2000);
   final pitchupDart = PitchHandler(InstrumentType.guitar);
 
-  var note = "";
-  var status = "Click on start";
+  String note = "";
+  double pitch = 0.00;
+  String status = "";
 
-  Future<void> _startCapture() async {
-    await _audioRecorder.start(listener, onError,
+  void _startCapture() {
+    _audioRecorder.start(listener, onError,
         sampleRate: 44100, bufferSize: 3000);
 
     setState(() {
       note = "";
-      status = "Play something";
-    });
-  }
-
-  Future<void> _stopCapture() async {
-    await _audioRecorder.stop();
-
-    setState(() {
-      note = "";
-      status = "Click on start";
     });
   }
 
@@ -57,56 +48,74 @@ class _TuneScreenState extends State<TuneScreen> {
     //If there is a pitch - evaluate it
     if (result.pitched) {
       //Uses the pitchupDart library to check a given pitch for a Guitar
-      log("${result.pitch}");
       final handledPitchResult = pitchupDart.handlePitch(result.pitch);
-      log(handledPitchResult.note);
-
-      //Updates the state with the result
       setState(() {
-        status = handledPitchResult.tuningStatus.toString();
+        note = handledPitchResult.note;
+        pitch = double.parse(result.pitch.toStringAsFixed(2));
+        if (handledPitchResult.tuningStatus.name != 'undefined') {
+          status = handledPitchResult.tuningStatus.name;
+        }
       });
+      // note = handledPitchResult.note;
+      log("the pitch is ${result.pitch} the closest note is $note the status is ${handledPitchResult.tuningStatus.name}");
     }
   }
+
   void onError(Object e) {
-    print(e);
+    log("$e");
   }
 
   @override
+  void initState() {
+    super.initState();
+    _startCapture(); // Start capture when widget is initialized
+  }
+
+  @override
+  void dispose() {
+    // _stopCapture(); // Ensure to stop capture when disposing the widget
+    _audioRecorder.stop();
+    super.dispose();
+  }
+
+  Map<String, double> frequencies = {
+    'E2': 82.41,
+    'A2': 110.00,
+    'D3': 146.83,
+    'G3': 196.00,
+    'B3': 246.94,
+    'E4': 329.63
+  };
+
+  @override
   Widget build(BuildContext context) {
-    return  Center(
-        child: Column(children: [
-          Center(
-              child: Text(
-            note,
-            style: const TextStyle(
-                color: Colors.black87,
-                fontSize: 25.0,
-                fontWeight: FontWeight.bold),
-          )),
-          const Spacer(),
-          Center(
-              child: Text(
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 300.0,
+            height: 300.0,
+            decoration: BoxDecoration(
+              color: status == 'tuned' ? Colors.green : Colors.grey,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+                child: Text(
+              note,
+              style: const TextStyle(
+                  fontSize: 124,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            )),
+          ),
+          Text(
             status,
-            style: const TextStyle(
-                color: Colors.black87,
-                fontSize: 14.0,
-                fontWeight: FontWeight.bold),
-          )),
-          Expanded(
-              child: Row(
-            children: [
-              Expanded(
-                  child: Center(
-                      child: FloatingActionButton(
-                          onPressed: _startCapture,
-                          child: const Text("Start")))),
-              Expanded(
-                  child: Center(
-                      child: FloatingActionButton(
-                          onPressed: _stopCapture, child: const Text("Stop")))),
-            ],
-          ))
-        ]),
-      );
+            style: const TextStyle(fontSize: 64),
+          ),
+        ],
+      ),
+    );
   }
 }
