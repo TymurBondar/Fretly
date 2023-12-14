@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 // import 'package:permission_handler/permission_handler.dart';
 // import 'package:pitch_detector_dart/pitch_detector.dart';
@@ -41,28 +40,34 @@ class MyAppState extends State<MyApp> {
   Widget _buildNavigationBar() {
     return NavigationBarTheme(
       data: NavigationBarThemeData(
-        indicatorColor: const Color.fromARGB(255, 18, 86, 141),
+        indicatorColor: const Color.fromARGB(255, 11, 169, 103),
         labelTextStyle: MaterialStateProperty.all(
           const TextStyle(
               color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
         ),
       ),
-      child: NavigationBar(
-        backgroundColor: const Color.fromARGB(255, 26, 104, 168),
-        height: 55,
-        selectedIndex: index,
-        onDestinationSelected: (int index) {
-          setState(() => this.index = index);
-          // Handle navigation logic here
-        },
-        destinations: [
-          _buildNavigationDestination(Icons.graphic_eq_outlined, "Record"),
-          _buildNavigationDestination(Icons.picture_as_pdf, "Tabs"),
-          _buildNavigationDestination(Icons.music_note_outlined, "Tune"),
-          _buildNavigationDestination(Icons.settings, "Settings"),
-        ],
-      ),
-    );
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15)
+          ),
+          child: NavigationBar(
+            backgroundColor: const Color.fromARGB(255, 4, 4, 10),
+            height: 65,
+            selectedIndex: index,
+            onDestinationSelected: (int index) {
+              setState(() => this.index = index);
+              // Handle navigation logic here
+            },
+            destinations: [
+              _buildNavigationDestination(Icons.graphic_eq_outlined, "Record"),
+              _buildNavigationDestination(Icons.picture_as_pdf, "Tabs"),
+              _buildNavigationDestination(Icons.music_note_outlined, "Tune"),
+              _buildNavigationDestination(Icons.settings, "Settings"),
+            ],
+          ),
+        ),
+      );
   }
 
   Widget _buildNavigationDestination(IconData icon, String label) {

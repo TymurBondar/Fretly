@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:typed_data';
 import 'dart:developer';
 
@@ -46,18 +45,18 @@ class _TuneScreenState extends State<TuneScreen> {
     final result = pitchDetectorDart.getPitch(audioSample);
 
     //If there is a pitch - evaluate it
-    if (result.pitched) {
+    if (result.pitched && result.pitch > 60) {
       //Uses the pitchupDart library to check a given pitch for a Guitar
-      final handledPitchResult = pitchupDart.handlePitch(result.pitch);
-      setState(() {
-        note = handledPitchResult.note;
-        pitch = double.parse(result.pitch.toStringAsFixed(2));
-        if (handledPitchResult.tuningStatus.name != 'undefined') {
+      pitch = double.parse(result.pitch.toStringAsFixed(2));
+      final handledPitchResult = pitchupDart.handlePitch(pitch);
+      if (handledPitchResult.tuningStatus.name != 'undefined') {
+        setState(() {
+          note = handledPitchResult.note;
           status = handledPitchResult.tuningStatus.name;
-        }
-      });
+        });
+      }
       // note = handledPitchResult.note;
-      log("the pitch is ${result.pitch} the closest note is $note the status is ${handledPitchResult.tuningStatus.name}");
+      log("the pitch is $pitch \n the closest note is $note \n the status is $status");
     }
   }
 
@@ -97,7 +96,7 @@ class _TuneScreenState extends State<TuneScreen> {
             width: 300.0,
             height: 300.0,
             decoration: BoxDecoration(
-              color: status == 'tuned' ? Colors.green : Colors.grey,
+              color: status == 'tuned' ? const Color.fromARGB(255, 11, 169, 103) : Colors.grey,
               shape: BoxShape.circle,
             ),
             child: Center(

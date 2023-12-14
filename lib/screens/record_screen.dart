@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 // import services and widgets...
 
@@ -8,16 +7,28 @@ class RecordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Center(
+    return Center(
       child: Align(
         alignment: Alignment.bottomCenter,
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 20),
+          padding: const EdgeInsets.symmetric(vertical: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              OutlinedButton(onPressed: () => log(""), child: const Text('Start Recording')),
-              OutlinedButton(onPressed: () => log(""), child: const Text('Stop Recording')),
+              Flexible(
+                  child: OutlinedButton(
+                      onPressed: () => log("started"),
+                      child: const Text(
+                        'Start Recording',
+                        textAlign: TextAlign.center,
+                      ))),
+              Flexible(
+                  child:  OutlinedButton(
+                      onPressed: () => log('stopped'),
+                      child: const Text(
+                        'Stop Recording',
+                        textAlign: TextAlign.center,
+                      ))),
             ],
           ),
         ),

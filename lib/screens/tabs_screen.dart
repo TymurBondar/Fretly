@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:file_picker/file_picker.dart';
 
 class TabsScreen extends StatelessWidget {
@@ -19,7 +19,7 @@ class TabsScreen extends StatelessWidget {
     );
     if (result != null) {
       File file = File(result.files.single.path!);
-      log("${file.path}");
+      // log(file.path);
       OpenFile.open(file.path);
     } else {
       // User canceled the picker
@@ -27,15 +27,14 @@ class TabsScreen extends StatelessWidget {
     }
   }
 
-  displaySelectedFile(path){
-    
-  } 
+  displaySelectedFile(path) {}
 
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: OutlinedButton(
-            onPressed: () => openFileFromPath(),
-            child: const Text("Pick a Tab to view")));
+      child: OutlinedButton(
+          onPressed: () => openFileFromPath(),
+          child: const Text("Pick a Tab to view")),
+    );
   }
 }
