@@ -21,7 +21,7 @@ class _TuneScreenState extends State<TuneScreen> {
 
   String note = "";
   double pitch = 0.00;
-  String status = "";
+  String status = "Play \nSomething!";
 
   void _startCapture() {
     _audioRecorder.start(listener, onError,
@@ -39,7 +39,7 @@ class _TuneScreenState extends State<TuneScreen> {
 
     //Uses pitch_detector_dart library to detect a pitch from the audio sample
 
-    //data is a list of super wierd numbers
+    // data is a list of super wierd numbers
     // log("$audioSample");
 
     final result = pitchDetectorDart.getPitch(audioSample);
@@ -111,7 +111,7 @@ class _TuneScreenState extends State<TuneScreen> {
           ),
           Text(
             status,
-            style: const TextStyle(fontSize: 64),
+            style: const TextStyle(fontSize: 48,), textAlign: TextAlign.center,
           ),
         ],
       ),

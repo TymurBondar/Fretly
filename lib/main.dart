@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:permission_handler/permission_handler.dart';
 // import 'package:pitch_detector_dart/pitch_detector.dart';
@@ -9,7 +10,7 @@ import 'package:fretly/screens/tune_screen.dart';
 import 'package:fretly/screens/settings_screen.dart';
 
 void main() {
-  runApp(const MaterialApp(home: MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -29,45 +30,56 @@ class MyAppState extends State<MyApp> {
     const SettingsScreen()
   ];
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: screens[index],
+ @override
+Widget build(BuildContext context) {
+  return MaterialApp(
+    home: Scaffold(
+      extendBody: true,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color.fromARGB(255, 245, 247, 250), Color.fromARGB(255, 195, 207, 226)], // Customize your gradient colors
+          ),
+        ),
+        child: screens[index], // Your current screen
+      ),
       bottomNavigationBar: _buildNavigationBar(),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildNavigationBar() {
-    return NavigationBarTheme(
+    return  NavigationBarTheme(
       data: NavigationBarThemeData(
-        indicatorColor: const Color.fromARGB(255, 11, 169, 103),
+        indicatorColor: const Color.fromARGB(255, 224, 30, 121),
         labelTextStyle: MaterialStateProperty.all(
           const TextStyle(
-              color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15)
-          ),
-          child: NavigationBar(
-            backgroundColor: const Color.fromARGB(255, 4, 4, 10),
-            height: 65,
-            selectedIndex: index,
-            onDestinationSelected: (int index) {
-              setState(() => this.index = index);
-              // Handle navigation logic here
-            },
-            destinations: [
-              _buildNavigationDestination(Icons.graphic_eq_outlined, "Record"),
-              _buildNavigationDestination(Icons.picture_as_pdf, "Tabs"),
-              _buildNavigationDestination(Icons.music_note_outlined, "Tune"),
-              _buildNavigationDestination(Icons.settings, "Settings"),
-            ],
-          ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+        child: NavigationBar(
+          backgroundColor: const Color.fromARGB(255, 182, 12, 63),
+          height: 65,
+          selectedIndex: index,
+          onDestinationSelected: (int index) {
+            setState(() => this.index = index);
+            // Handle navigation logic here
+          },
+          destinations: [
+            _buildNavigationDestination(CupertinoIcons.mic, "Record"),
+            _buildNavigationDestination(CupertinoIcons.music_note_list, "Tabs"),
+            _buildNavigationDestination(CupertinoIcons.tuningfork, "Tune"),
+            _buildNavigationDestination(CupertinoIcons.settings, "Settings"),
+          ],
         ),
-      );
+      ),
+    );
   }
 
   Widget _buildNavigationDestination(IconData icon, String label) {
