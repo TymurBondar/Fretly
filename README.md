@@ -1,5 +1,7 @@
 <p align="center">
-    <a href=""><img src="[https://img.shields.io/badge/javascript-%2320232a.svg?style=for-the-badge&logo=javascript&logoColor=ffdd54](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)" /></a>
+    <a href=""><img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white"/></a>
+</p>
+
 # Fretly - Your All-in-One Guitar Companion
 
 ## Introduction
