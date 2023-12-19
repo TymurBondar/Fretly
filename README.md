@@ -1,25 +1,22 @@
-# fretly
+# Fretly - Your All-in-One Guitar Companion
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-## About Fretly
-Fretly is an innovative app designed for guitar enthusiasts of all levels. With Fretly, you can easily tune your guitar, record your practice sessions, and store your guitar tabs in one convenient location.
+## Introduction
+Welcome to Fretly, an innovative guitar app crafted with Flutter. Fretly stands out with its three core features: a precise guitar tuner, a user-friendly tab viewer, and a handy recording tool. As a Flutter-based guitar app, Fretly offers a unique experience for guitar enthusiasts. 
 
 ## Features
-- Guitar Tuner: Tune your guitar with precision using Fretly's intuitive tuning feature.
-- Practice Recorder: Record your practice sessions to track progress and listen back to your performance.
-- Tab Storage: Organize and store your guitar tabs, making them easily accessible whenever you need them.
-  
+1. **Tuner:** Utilize your device's microphone to accurately tune your guitar. Simply navigate to the tune screen and grant microphone permissions.
+2. **Tab Viewer:** Easily access and view guitar tabs right from your device.
+3. **Recorder:** Record your guitar sessions and play them back anytime to track your progress.
+
+## Installation
+Coming soon to the App Store and Google Play! (Note: Currently, Fretly is available for iOS 17 and later.)
+
+## Usage
+Here are some quick steps to get started with Fretly:
+- **Tuning your Guitar:** Open the tuner in the navbar, grant microphone access, and start tuning.
+- **Viewing Tabs:** Select the tab viewer from the navbar to access and view your tabs.
+- **Recording:** Navigate to the recording feature in the navbar to start and playback your recordings.
+
+## Acknowledgments
+Special thanks to Lucas Bento (@techpotatoes) for his libraries (pitch detector dart and pitchUp dart) on pitch detection, which were instrumental in developing Fretly's tuner.
+
