@@ -9,11 +9,11 @@ Welcome to Fretly, an innovative guitar app crafted with Flutter. Fretly stands 
 
 ## Features
 1. **Tuner:** Utilize your device's microphone to accurately tune your guitar. Simply navigate to the tune screen and grant microphone permissions.
-   ![Tune Screen](<Simulator Screenshot - iPhone 15 Pro Max - 2023-12-19 at 13.06.18.png>)
-   ![Alt text](<Simulator Screenshot - iPhone 15 Pro Max - 2023-12-19 at 13.10.14.png>)
-   ![Alt text](<Simulator Screenshot - iPhone 15 Pro Max - 2023-12-19 at 13.09.45.png>)
+   ![Tune Screen](<./screenshots/TuneScreenDefault.png>)
+   ![Status Not Tuned](<./screenshots/TuneScreenUntuned.png>)
+   ![Status Tuned](<./screenshots/TuneScreenTuned.png>)
 2. **Tab Viewer:** Easily access and view guitar tabs right from your device.
-   ![Alt text](simulator_screenshot_7A7F67F1-EC86-4953-8417-301103286548.png)
+   ![Pick a Tab](<./screenshots/TabsScreen.png>)
    After you click the button, the selection menu will appear where you can choose a pdf to open.
 3. **Recorder:** Record your guitar sessions and play them back anytime to track your progress.
 
