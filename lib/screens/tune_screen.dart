@@ -8,7 +8,8 @@ import 'package:pitchupdart/instrument_type.dart';
 import 'package:pitchupdart/pitch_handler.dart';
 
 class TuneScreen extends StatefulWidget {
-  const TuneScreen({super.key});
+  final bool showPitch;
+  const TuneScreen({super.key, required this.showPitch});
 
   @override
   State<TuneScreen> createState() => _TuneScreenState();
@@ -100,10 +101,10 @@ class _TuneScreenState extends State<TuneScreen> {
               shape: BoxShape.circle,
             ),
             child: Center(
-                child: Text(
+                child: Text( widget.showPitch ? "$note \n the pitch is $pitch" :
               note,
               style: const TextStyle(
-                  fontSize: 124,
+                  fontSize: 38,
                   color: Colors.white,
                   fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,

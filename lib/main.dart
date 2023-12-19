@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:permission_handler/permission_handler.dart';
@@ -22,16 +24,28 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   int index = 2; // Initial index
+  bool showPitch = false;
 
-  final screens = [
-    const RecordScreen(),
-    const TabsScreen(),
-    const TuneScreen(),
-    const SettingsScreen()
-  ];
+  
+
+  void _handleShowPitchChanged(bool value) {
+    log("the value is :$value");
+    setState(() {
+      showPitch = value;
+    });
+  }
 
  @override
 Widget build(BuildContext context) {
+  final screens = [
+    const RecordScreen(),
+    const TabsScreen(),
+    TuneScreen(showPitch: showPitch,),
+    SettingsScreen(
+      onShowPitchChanged: _handleShowPitchChanged,
+      showPitch: showPitch,
+    )
+  ];
   return MaterialApp(
     home: Scaffold(
       extendBody: true,
