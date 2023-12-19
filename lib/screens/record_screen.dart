@@ -58,13 +58,45 @@ class _RecordScreenState extends State<RecordScreen> {
     }
   }
 
-  Future<String> getAudioPath() async {
+  Future<String?> promptRecordingName(BuildContext context) async {
+  String? recordingName;
+
+  return showDialog<String>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Name Your Recording'),
+      content: TextField(
+        onChanged: (value) {
+          recordingName = value;
+        },
+        decoration: InputDecoration(hintText: "Enter name here"),
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('Cancel'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        TextButton(
+          child: const Text('OK'),
+          onPressed: () {
+            Navigator.of(context).pop(recordingName);
+          },
+        ),
+      ],
+    ),
+  );
+}
+
+
+  Future<String> getAudioPath(String name) async {
     final directory = await getApplicationDocumentsDirectory();
     final audioDirectory = Directory('${directory.path}/AudioRecordings');
     if (!await audioDirectory.exists()) {
       await audioDirectory.create(recursive: true);
     }
-    return '${audioDirectory.path}/my_audio_${DateTime.now().millisecondsSinceEpoch}.wav';
+    return '${audioDirectory.path}/$name.wav';
   }
 
   RecordConfig config = const RecordConfig(
@@ -82,18 +114,20 @@ class _RecordScreenState extends State<RecordScreen> {
 
   Future<void> startRecording() async {
     try {
-      if (await audioRecord.hasPermission()) {
-        String path =
-            await getAudioPath(); // Use await to get the String path// Now path is a String, not a Future
+    if (await audioRecord.hasPermission()) {
+      String? name = await promptRecordingName(context);
+      if (name != null && name.isNotEmpty) {
+        String path = await getAudioPath(name); // Updated to include name
         await audioRecord.start(config, path: path);
         log("recording started");
         setState(() {
           isRecording = true;
         });
       }
-    } catch (e) {
-      log("$e");
     }
+  } catch (e) {
+    log("$e");
+  }
   }
 
   Future<void> stopRecording() async {
