@@ -50,9 +50,12 @@ dependencies:
   # Needed to view pdfs
   flutter_pdfview: ^1.3.2
 
+
   # Needed to find the file in the system.
   file_picker: ^6.1.1
   flutter_audio_capture: ^1.1.6
+  audioplayers: ^5.2.1
+  path_provider: ^2.1.1
 
 dev_dependencies:
   flutter_test:
