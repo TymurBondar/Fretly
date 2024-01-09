@@ -19,8 +19,7 @@ class _RecordScreenState extends State<RecordScreen> {
   late AudioPlayer audioPlayer;
   bool isRecording = false;
   List<String> audioFiles = [];
-  String audioPath =
-      '/private/var/mobile/Containers/Data/Application/66FD38E4-2DC2-4B82-A130-70EBA3000985/tmp/mixkit-dog-barking-twice-1.wav';
+  String audioPath = '';
 
   @override
   void initState() {
@@ -59,36 +58,35 @@ class _RecordScreenState extends State<RecordScreen> {
   }
 
   Future<String?> promptRecordingName(BuildContext context) async {
-  String? recordingName;
+    String? recordingName;
 
-  return showDialog<String>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Name Your Recording'),
-      content: TextField(
-        onChanged: (value) {
-          recordingName = value;
-        },
-        decoration: InputDecoration(hintText: "Enter name here"),
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Name Your Recording'),
+        content: TextField(
+          onChanged: (value) {
+            recordingName = value;
+          },
+          decoration: const InputDecoration(hintText: "Enter name here"),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop(recordingName);
+            },
+          ),
+        ],
       ),
-      actions: <Widget>[
-        TextButton(
-          child: const Text('Cancel'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        TextButton(
-          child: const Text('OK'),
-          onPressed: () {
-            Navigator.of(context).pop(recordingName);
-          },
-        ),
-      ],
-    ),
-  );
-}
-
+    );
+  }
 
   Future<String> getAudioPath(String name) async {
     final directory = await getApplicationDocumentsDirectory();
@@ -114,36 +112,53 @@ class _RecordScreenState extends State<RecordScreen> {
 
   Future<void> startRecording() async {
     try {
-    if (await audioRecord.hasPermission()) {
-      String? name = await promptRecordingName(context);
-      if (name != null && name.isNotEmpty) {
-        String path = await getAudioPath(name); // Updated to include name
+      if (await audioRecord.hasPermission()) {
+        String path = await getAudioPath("temp"); // Updated to include name
         await audioRecord.start(config, path: path);
         log("recording started");
         setState(() {
           isRecording = true;
         });
       }
-    }
-  } catch (e) {
-    log("$e");
-  }
-  }
-
-  Future<void> stopRecording() async {
-    try {
-      String? path = await audioRecord.stop();
-      log("recording stopped");
-      setState(() {
-        isRecording = false;
-        audioPath = path!;
-        updateRecordingsList(); // Refresh the list after recording
-      });
-      log("file saved to $audioPath");
     } catch (e) {
       log("$e");
     }
   }
+
+  Future<void> stopRecording() async {
+  try {
+    String? tempPath = await audioRecord.stop();
+    log("Recording stopped");
+    setState(() {
+      isRecording = false;
+    });
+
+    if (tempPath != null) {
+      renameRecording(tempPath);
+    }
+  } catch (e) {
+    log("$e");
+  }
+}
+
+void renameRecording(String tempPath) {
+  // Delay the prompt to ensure it's not called with an outdated context
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    String? name = await promptRecordingName(context);
+    if (name != null && name.isNotEmpty) {
+      String finalPath = await getAudioPath(name);
+      File(tempPath).renameSync(finalPath);
+      setState(() {
+        audioPath = finalPath;
+        updateRecordingsList();
+      });
+      log("File saved to $audioPath");
+    } else {
+      // Optionally delete the temp file if no name is given
+      File(tempPath).delete();
+    }
+  });
+}
 
   Future<void> playRecording(String filePath) async {
     try {

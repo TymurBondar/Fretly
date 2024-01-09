@@ -45,13 +45,13 @@ Widget build(BuildContext context) {
       onShowPitchChanged: _handleShowPitchChanged,
       showPitch: showPitch,
     )
-  ];
+  ]; 
   return MaterialApp(
     home: Scaffold(
       extendBody: true,
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
+          gradient: LinearGradient( 
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [Color.fromARGB(255, 245, 247, 250), Color.fromARGB(255, 195, 207, 226)], // Customize your gradient colors
