@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_capture/flutter_audio_capture.dart';
@@ -53,16 +52,15 @@ class _TuneScreenState extends State<TuneScreen> {
       if (handledPitchResult.tuningStatus.name != 'undefined') {
         setState(() {
           note = handledPitchResult.note;
-          status = handledPitchResult.tuningStatus.name;
+          status = formatStatus(handledPitchResult.tuningStatus.name);
         });
       }
       // note = handledPitchResult.note;
-      log("the pitch is $pitch \n the closest note is $note \n the status is $status");
     }
   }
 
   void onError(Object e) {
-    log("$e");
+    
   }
 
   @override
@@ -86,6 +84,22 @@ class _TuneScreenState extends State<TuneScreen> {
     'B3': 246.94,
     'E4': 329.63
   };
+
+  String formatStatus(String status) {
+  switch (status) {
+    case "toolow":
+      return "too low";
+    case "toohigh":
+      return "too high";
+    case "waytoolow":
+      return "way too low";
+    case "waytoohigh":
+      return "way too high";
+    default:
+      return status; // Returns the original status if it doesn't match any case
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {

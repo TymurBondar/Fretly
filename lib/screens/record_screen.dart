@@ -170,22 +170,49 @@ void renameRecording(String tempPath) {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          OutlinedButton(
-              onPressed: isRecording ? stopRecording : startRecording,
-              child: isRecording
-                  ? const Text("Stop Recording")
-                  : const Text("Start Recording")),
-          ...audioFiles.map((file) => OutlinedButton(
-              onPressed: () => playRecording(file),
-              child: Text("Play: ${file.split('/').last}"))),
-        ],
-      ),
-    );
+  void deleteRecording(String filePath) {
+    File(filePath).delete();
+    updateRecordingsList();
   }
+
+  @override
+Widget build(BuildContext context) {
+  return Column(
+    children: [
+      Expanded(
+        child: ListView(
+          children: audioFiles.map((file) => Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => playRecording(file),
+                  child: Text("Play: ${file.split('/').last}"),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () => deleteRecording(file),
+              ),
+            ],
+          )).toList(),
+        ),
+      ),
+      Flexible(  // Wrap the button row in a Flexible widget
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.mic),
+              onPressed: isRecording ? null : startRecording,
+            ),
+            IconButton(
+              icon: const Icon(Icons.stop),
+              onPressed: isRecording ? stopRecording : null,
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
 }

@@ -54,7 +54,7 @@ Widget build(BuildContext context) {
           gradient: LinearGradient( 
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color.fromARGB(255, 245, 247, 250), Color.fromARGB(255, 195, 207, 226)], // Customize your gradient colors
+            colors: [Color.fromARGB(255, 245, 247, 250), Color.fromARGB(255, 242, 239, 224)], // Customize your gradient colors
           ),
         ),
         child: screens[index], // Your current screen
