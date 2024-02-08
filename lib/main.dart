@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 // import 'package:permission_handler/permission_handler.dart';
 // import 'package:pitch_detector_dart/pitch_detector.dart';
 
@@ -12,7 +14,13 @@ import 'package:fretly/screens/tune_screen.dart';
 import 'package:fretly/screens/settings_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatefulWidget {
@@ -79,7 +87,7 @@ Widget build(BuildContext context) {
             topLeft: Radius.circular(15), topRight: Radius.circular(15)),
         child: NavigationBar(
           backgroundColor: const Color.fromARGB(255, 182, 12, 63),
-          height: 65,
+          height: 70,
           selectedIndex: index,
           onDestinationSelected: (int index) {
             setState(() => this.index = index);
@@ -98,7 +106,7 @@ Widget build(BuildContext context) {
 
   Widget _buildNavigationDestination(IconData icon, String label) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(top: 5),
       child: NavigationDestination(
         icon: Icon(
           icon,
