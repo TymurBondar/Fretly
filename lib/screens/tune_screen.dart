@@ -40,7 +40,7 @@ class _TuneScreenState extends State<TuneScreen> {
     final List<double> audioSample = buffer.toList();
 
     if (lastEvaluatedTime == null ||
-        DateTime.now().difference(lastEvaluatedTime!).inMilliseconds > 400) {
+        DateTime.now().difference(lastEvaluatedTime!).inMilliseconds > 440) {
       lastEvaluatedTime = DateTime.now();
       // Update last evaluated time
       //Uses pitch_detector_dart library to detect a pitch from the audio sample
@@ -104,9 +104,13 @@ class _TuneScreenState extends State<TuneScreen> {
             height: 300.0,
             decoration: BoxDecoration(
               color: status == 'tuned'
-                  ? const Color.fromARGB(255, 11, 169, 103)
-                  : Colors.grey,
+                  ? const Color.fromARGB(255, 80, 141, 105)
+                  : Colors.teal[300],
               shape: BoxShape.circle,
+              border: Border.all(
+                color: const Color.fromARGB(255, 255, 143, 143),
+                width: 8.0,
+              ),
             ),
             child: Center(
                 child: Text(
@@ -122,6 +126,7 @@ class _TuneScreenState extends State<TuneScreen> {
             status,
             style: const TextStyle(
               fontSize: 48,
+              color: Colors.black,
             ),
             textAlign: TextAlign.center,
           ),
