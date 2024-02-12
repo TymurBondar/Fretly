@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'dart:developer';
 import 'package:flutter_audio_capture/flutter_audio_capture.dart';
 import 'package:pitch_detector_dart/pitch_detector.dart';
 import 'package:pitchupdart/instrument_type.dart';
@@ -18,6 +19,7 @@ class _TuneScreenState extends State<TuneScreen> {
   final _audioRecorder = FlutterAudioCapture();
   final pitchDetectorDart = PitchDetector(44100, 2000);
   final pitchupDart = PitchHandler(InstrumentType.guitar);
+  DateTime? lastEvaluatedTime;
 
   String note = "";
   double pitch = 0.00;
@@ -37,31 +39,31 @@ class _TuneScreenState extends State<TuneScreen> {
     var buffer = Float64List.fromList(obj.cast<double>());
     final List<double> audioSample = buffer.toList();
 
-    //Uses pitch_detector_dart library to detect a pitch from the audio sample
+    if (lastEvaluatedTime == null ||
+        DateTime.now().difference(lastEvaluatedTime!).inMilliseconds > 400) {
+      lastEvaluatedTime = DateTime.now();
+      // Update last evaluated time
+      //Uses pitch_detector_dart library to detect a pitch from the audio sample
 
-    // data is a list of super wierd numbers
-    // log("$audioSample");
+      final result = pitchDetectorDart.getPitch(audioSample);
 
-    final result = pitchDetectorDart.getPitch(audioSample);
-
-    //If there is a pitch - evaluate it
-    if (result.pitched && result.pitch > 60) {
-      //Uses the pitchupDart library to check a given pitch for a Guitar
-      pitch = double.parse(result.pitch.toStringAsFixed(2));
-      final handledPitchResult = pitchupDart.handlePitch(pitch);
-      if (handledPitchResult.tuningStatus.name != 'undefined') {
-        setState(() {
-          note = handledPitchResult.note;
-          status = formatStatus(handledPitchResult.tuningStatus.name);
-        });
+      //If there is a pitch - evaluate it
+      if (result.pitched && result.pitch > 60) {
+        //Uses the pitchupDart library to check a given pitch for a Guitar
+        pitch = double.parse(result.pitch.toStringAsFixed(2));
+        final handledPitchResult = pitchupDart.handlePitch(pitch);
+        log("pitch is $pitch");
+        if (handledPitchResult.tuningStatus.name != 'undefined') {
+          setState(() {
+            note = handledPitchResult.note;
+            status = formatStatus(handledPitchResult.tuningStatus.name);
+          });
+        }
       }
-      // note = handledPitchResult.note;
     }
   }
 
-  void onError(Object e) {
-    
-  }
+  void onError(Object e) {}
 
   @override
   void initState() {
@@ -76,30 +78,20 @@ class _TuneScreenState extends State<TuneScreen> {
     super.dispose();
   }
 
-  Map<String, double> frequencies = {
-    'E2': 82.41,
-    'A2': 110.00,
-    'D3': 146.83,
-    'G3': 196.00,
-    'B3': 246.94,
-    'E4': 329.63
-  };
-
   String formatStatus(String status) {
-  switch (status) {
-    case "toolow":
-      return "too low";
-    case "toohigh":
-      return "too high";
-    case "waytoolow":
-      return "way too low";
-    case "waytoohigh":
-      return "way too high";
-    default:
-      return status; // Returns the original status if it doesn't match any case
+    switch (status) {
+      case "toolow":
+        return "too low";
+      case "toohigh":
+        return "too high";
+      case "waytoolow":
+        return "way too low";
+      case "waytoohigh":
+        return "way too high";
+      default:
+        return status; // Returns the original status if it doesn't match any case
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -111,12 +103,14 @@ class _TuneScreenState extends State<TuneScreen> {
             width: 300.0,
             height: 300.0,
             decoration: BoxDecoration(
-              color: status == 'tuned' ? const Color.fromARGB(255, 11, 169, 103) : Colors.grey,
+              color: status == 'tuned'
+                  ? const Color.fromARGB(255, 11, 169, 103)
+                  : Colors.grey,
               shape: BoxShape.circle,
             ),
             child: Center(
-                child: Text( widget.showPitch ? "$note \n the pitch is $pitch" :
-              note,
+                child: Text(
+              widget.showPitch ? "$note \n the pitch is $pitch" : note,
               style: const TextStyle(
                   fontSize: 38,
                   color: Colors.white,
@@ -126,7 +120,10 @@ class _TuneScreenState extends State<TuneScreen> {
           ),
           Text(
             status,
-            style: const TextStyle(fontSize: 48,), textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 48,
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
