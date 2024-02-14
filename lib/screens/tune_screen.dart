@@ -105,7 +105,7 @@ class _TuneScreenState extends State<TuneScreen> {
             decoration: BoxDecoration(
               color: status == 'tuned'
                   ? const Color.fromARGB(255, 80, 141, 105)
-                  : Colors.teal[300],
+                  : const Color.fromARGB(255, 173, 171, 171),
               shape: BoxShape.circle,
               border: Border.all(
                 color: const Color.fromARGB(255, 255, 143, 143),

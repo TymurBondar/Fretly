@@ -34,8 +34,6 @@ class MyAppState extends State<MyApp> {
   int index = 2; // Initial index
   bool showPitch = false;
 
-  
-
   void _handleShowPitchChanged(bool value) {
     log("the value is :$value");
     setState(() {
@@ -43,40 +41,35 @@ class MyAppState extends State<MyApp> {
     });
   }
 
- @override
-Widget build(BuildContext context) {
-  final screens = [
-    const RecordScreen(),
-    const TabsScreen(),
-    TuneScreen(showPitch: showPitch,),
-    SettingsScreen(
-      onShowPitchChanged: _handleShowPitchChanged,
-      showPitch: showPitch,
-    )
-  ]; 
-  return MaterialApp(
-    home: Scaffold(
-      extendBody: true,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient( 
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color.fromARGB(255, 245, 247, 250), Color.fromARGB(255, 242, 239, 224)], // Customize your gradient colors
-          ),
-        ),
-        child: screens[index], // Your current screen
+  @override
+  Widget build(BuildContext context) {
+    final screens = [
+      const RecordScreen(),
+      const TabsScreen(),
+      TuneScreen(
+        showPitch: showPitch,
       ),
-      bottomNavigationBar: _buildNavigationBar(),
-    ),
-  );
-}
-
+      SettingsScreen(
+        onShowPitchChanged: _handleShowPitchChanged,
+        showPitch: showPitch,
+      )
+    ];
+    return MaterialApp(
+      home: Scaffold(
+        extendBody: true,
+        backgroundColor: Colors.white,
+        body: Container(
+          child: screens[index], // Your current screen
+        ),
+        bottomNavigationBar: _buildNavigationBar(),
+      ),
+    );
+  }
 
   Widget _buildNavigationBar() {
-    return  NavigationBarTheme(
+    return NavigationBarTheme(
       data: NavigationBarThemeData(
-        indicatorColor: const Color.fromARGB(255, 224, 30, 121),
+        indicatorColor: const Color.fromARGB(255, 255, 143, 143),
         labelTextStyle: MaterialStateProperty.all(
           const TextStyle(
               color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
@@ -86,8 +79,8 @@ Widget build(BuildContext context) {
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(15), topRight: Radius.circular(15)),
         child: NavigationBar(
-          backgroundColor: const Color.fromARGB(255, 182, 12, 63),
-          height: 70,
+          backgroundColor: const Color.fromARGB(255, 19, 19, 19),
+          height: 80,
           selectedIndex: index,
           onDestinationSelected: (int index) {
             setState(() => this.index = index);
@@ -110,8 +103,8 @@ Widget build(BuildContext context) {
       child: NavigationDestination(
         icon: Icon(
           icon,
-          color: Colors.white,
-          size: 36.0,
+          color: Colors.grey[100],
+          size: 32.0,
         ),
         label: label,
       ),

@@ -126,39 +126,39 @@ class _RecordScreenState extends State<RecordScreen> {
   }
 
   Future<void> stopRecording() async {
-  try {
-    String? tempPath = await audioRecord.stop();
-    log("Recording stopped");
-    setState(() {
-      isRecording = false;
-    });
-
-    if (tempPath != null) {
-      renameRecording(tempPath);
-    }
-  } catch (e) {
-    log("$e");
-  }
-}
-
-void renameRecording(String tempPath) {
-  // Delay the prompt to ensure it's not called with an outdated context
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
-    String? name = await promptRecordingName(context);
-    if (name != null && name.isNotEmpty) {
-      String finalPath = await getAudioPath(name);
-      File(tempPath).renameSync(finalPath);
+    try {
+      String? tempPath = await audioRecord.stop();
+      log("Recording stopped");
       setState(() {
-        audioPath = finalPath;
-        updateRecordingsList();
+        isRecording = false;
       });
-      log("File saved to $audioPath");
-    } else {
-      // Optionally delete the temp file if no name is given
-      File(tempPath).delete();
+
+      if (tempPath != null) {
+        renameRecording(tempPath);
+      }
+    } catch (e) {
+      log("$e");
     }
-  });
-}
+  }
+
+  void renameRecording(String tempPath) {
+    // Delay the prompt to ensure it's not called with an outdated context
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      String? name = await promptRecordingName(context);
+      if (name != null && name.isNotEmpty) {
+        String finalPath = await getAudioPath(name);
+        File(tempPath).renameSync(finalPath);
+        setState(() {
+          audioPath = finalPath;
+          updateRecordingsList();
+        });
+        log("File saved to $audioPath");
+      } else {
+        // Optionally delete the temp file if no name is given
+        File(tempPath).delete();
+      }
+    });
+  }
 
   Future<void> playRecording(String filePath) async {
     try {
@@ -176,43 +176,50 @@ void renameRecording(String tempPath) {
   }
 
   @override
-Widget build(BuildContext context) {
-  return Column(
-    children: [
-      Expanded(
-        child: ListView(
-          children: audioFiles.map((file) => Row(
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(
+            children: audioFiles
+                .map((file) => Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => playRecording(file),
+                            child: Text(
+                              "Play: ${file.split('/').last}",
+                              style: const TextStyle(
+                                  color: Color.fromARGB(255, 19, 19, 19)),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () => deleteRecording(file),
+                        ),
+                      ],
+                    ))
+                .toList(),
+          ),
+        ),
+        Flexible(
+          // Wrap the button row in a Flexible widget
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => playRecording(file),
-                  child: Text("Play: ${file.split('/').last}"),
-                ),
+              IconButton(
+                icon: const Icon(Icons.mic),
+                onPressed: isRecording ? null : startRecording,
               ),
               IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () => deleteRecording(file),
+                icon: const Icon(Icons.stop),
+                onPressed: isRecording ? stopRecording : null,
               ),
             ],
-          )).toList(),
+          ),
         ),
-      ),
-      Flexible(  // Wrap the button row in a Flexible widget
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.mic),
-              onPressed: isRecording ? null : startRecording,
-            ),
-            IconButton(
-              icon: const Icon(Icons.stop),
-              onPressed: isRecording ? stopRecording : null,
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 }

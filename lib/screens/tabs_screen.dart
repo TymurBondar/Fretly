@@ -33,7 +33,7 @@ class TabsScreen extends StatelessWidget {
     return Center(
       child: OutlinedButton(
           onPressed: () => openFileFromPath(),
-          child: const Text("Pick a Tab to view")),
+          child: const Text("Pick a Tab to view", style: TextStyle(color: Color.fromARGB(255, 19, 19, 19)),)),
     );
   }
 }

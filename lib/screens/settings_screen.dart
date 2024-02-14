@@ -23,6 +23,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title:
                 const Text(style: TextStyle(color: Colors.black), 'Show Pitch'),
             value: showPitch,
+            activeColor: const Color.fromARGB(255, 255, 143, 143),
+            inactiveThumbColor: const Color.fromARGB(255, 19, 19, 19),
             onChanged: (bool value) {
               setState(() {
                 showPitch = value;
