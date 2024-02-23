@@ -25,7 +25,7 @@ Welcome to Fretly, an innovative guitar app crafted with Flutter. Fretly stands 
 5. **Recorder:** Record your guitar sessions and play them back anytime to track your progress.
 
 ## Installation
-Coming soon to the App Store and Google Play! (Note: Currently, Fretly is available for iOS 17 and later.)
+Available on appstore! https://apps.apple.com/us/app/fretly/id6477488576
 
 ## Usage
 Here are some quick steps to get started with Fretly:
