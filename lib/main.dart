@@ -8,10 +8,10 @@ import 'package:flutter/services.dart';
 // import 'package:pitch_detector_dart/pitch_detector.dart';
 
 // figure out a way to do this all at once
-import 'package:fretly/screens/record_screen.dart';
-import 'package:fretly/screens/tabs_screen.dart';
-import 'package:fretly/screens/tune_screen.dart';
-import 'package:fretly/screens/settings_screen.dart';
+import 'package:fretly/src/screens/record_screen.dart';
+import 'package:fretly/src/screens/tabs_screen.dart';
+import 'package:fretly/src/screens/tune_screen.dart';
+import 'package:fretly/src/screens/settings_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,6 +55,7 @@ class MyAppState extends State<MyApp> {
       )
     ];
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         extendBody: true,
         backgroundColor: Colors.white,
