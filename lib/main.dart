@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fretly/src/controllers/record_controller/recorder_controller.dart';
+// import provider
+import 'package:provider/provider.dart';
 
 // import 'package:permission_handler/permission_handler.dart';
 // import 'package:pitch_detector_dart/pitch_detector.dart';
